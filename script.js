@@ -44,14 +44,21 @@ app.get('/api/users/:id', async (req, res) => {      // konkret id-ov useri data
     res.json(person)
 })
 
-app.delete('/api/users/:id', async (req, res) => {
+app.delete('/api/users/:id', async (req, res) => {      //Delete harcum
     const users = JSON.parse(await fs.readFile(path.join(__dirname, 'db', 'users.json'), 'utf-8'))
     const { id } = req.params
     const personInd = users.findIndex(user => user.id == id)
-    users.splice(personInd, 1)
-    await fs.unlink(path.join(__dirname, 'db', 'users.json'))
-    await fs.appendFile(path.join(__dirname, 'db', 'users.json'), JSON.stringify(users))
-    res.json(users)
+
+    if (personInd != -1) {
+        users.splice(personInd, 1)
+        await fs.unlink(path.join(__dirname, 'db', 'users.json'))
+        await fs.appendFile(path.join(__dirname, 'db', 'users.json'), JSON.stringify(users))
+        res.json(users)
+    } else {
+        setHeader(res, 404)
+        res.sendFile(path.join(__dirname, 'pages', 'errors.html'))
+    }
+
 })
 
 app.use((req, res) => {
