@@ -63,10 +63,10 @@
         "password": "ianTpass"
     },
     {
+        "id": 10,
         "name": "David",
         "email": "manuch@gmail.com",
-        "klir": "30 santimeter",
-        "id": 10
+        "password": "david200024"
     },
     {
         "id": 11,
