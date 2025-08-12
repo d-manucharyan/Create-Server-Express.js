@@ -53,12 +53,25 @@ app.delete('/api/users/:id', async (req, res) => {      //Delete harcum
         users.splice(personInd, 1)
         await fs.unlink(path.join(__dirname, 'db', 'users.json'))
         await fs.appendFile(path.join(__dirname, 'db', 'users.json'), JSON.stringify(users))
+        setHeader(res, 200)
         res.json(users)
     } else {
         setHeader(res, 404)
         res.sendFile(path.join(__dirname, 'pages', 'errors.html'))
     }
 
+})
+
+app.post('/api/users', async (req, res) => {
+    req.on('data', async (chunk) => {
+        const body = JSON.parse(chunk.toString())
+        const users = JSON.parse(await fs.readFile(path.join(__dirname, 'db', 'users.json'), 'utf-8'))
+        users.push(body)
+        await fs.unlink(path.join(__dirname, 'db', 'users.json'))
+        await fs.appendFile(path.join(__dirname, 'db', 'users.json'), JSON.stringify(users))
+        setHeader(res, 200)
+        res.json(users)  
+    })
 })
 
 app.use((req, res) => {
